@@ -15,7 +15,6 @@ import java.util.List;
 
 /**
  * @client ccsw
- *
  */
 @Service
 @Transactional
@@ -59,6 +58,7 @@ public class ClientServiceImpl implements ClientService {
         }
 
         BeanUtils.copyProperties(data, client, "id");
+        System.out.println("id" + client);
 
         this.clientRepository.save(client);
     }

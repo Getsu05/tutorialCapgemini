@@ -6,6 +6,8 @@ import com.ccsw.tutorial.client.model.ClientSearchDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,13 +20,14 @@ import java.util.stream.Collectors;
 
 /**
  * @client ccsw
- *
  */
 @Tag(name = "Client", description = "API of Client")
 @RequestMapping(value = "/client")
 @RestController
 @CrossOrigin(origins = "*")
 public class ClientController {
+    private static final Logger logger = LoggerFactory.getLogger(ClientController.class);
+
 
     @Autowired
     ClientService clientService;
@@ -57,6 +60,7 @@ public class ClientController {
     public void save(@RequestBody ClientDto dto) {
         boolean exists = clientService.existsByName(dto.getName());
         if (exists) {
+            logger.warn("Attempted to create a client with an existing name: {}", dto.getName());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un cliente con el mismo nombre");
         }
 
@@ -66,7 +70,7 @@ public class ClientController {
     /**
      * Método para actualizar un {@link Client}
      *
-     * @param id PK de la entidad
+     * @param id  PK de la entidad
      * @param dto datos de la entidad
      */
     @Operation(summary = "Update", description = "Method that updates a Client")
